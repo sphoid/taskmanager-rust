@@ -45,6 +45,14 @@ pub enum Command {
 		project_id: String,
 		task_id: String,
 	},
+	UpdateTask {
+		project_id: String,
+		task_id: String,
+		#[arg(long)]
+		name: Option<String>,
+		#[arg(long)]
+		description: Option<String>,
+	},
 	ListTasks {
 		project_id: String,
 	},
@@ -262,6 +270,29 @@ pub fn run_command(rtc: &mut RuntimeConfig, args: &ProjectArgs) -> Result<(), Bo
 			};
 
 			project.destroy_task(&task_uuid)?;
+		},
+		Command::UpdateTask { project_id, task_id, name, description } => {
+			let project_uuid = Uuid::parse_str(project_id.as_str())?;
+			let task_uuid = Uuid::parse_str(task_id.as_str())?;
+			let project = match rtc.projects_data.projects.get_mut(&project_uuid) {
+				Some(project) => project,
+				None => {
+					return Err(Box::new(io::Error::new(io::ErrorKind::NotFound, "Project not found")));
+				},
+			};
+			let task = match project.tasks.get_mut(&task_uuid) {
+				Some(task) => task,
+				None => {
+					return Err(Box::new(io::Error::new(io::ErrorKind::NotFound, "Task not found")));
+				},
+			};
+
+			if let Some(name) = name {
+				task.name = name.clone();
+			}
+			if let Some(description) = description {
+				task.description = description.clone();
+			}
 		},
 		Command::ListTasks { project_id } => {
 			let project_uuid = Uuid::parse_str(project_id.as_str())?;
