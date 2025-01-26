@@ -227,10 +227,21 @@ dependencies = [
 [[package]]
 name = "taskmanager"
 version = "0.1.0"
+source = "git+https://github.com/sphoid/libtaskmanager-rust.git#3fcc3f149014bcb60815d67893e3d88dd3061a62"
+dependencies = [
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
+name = "taskmanager-cli"
+version = "0.1.0"
 dependencies = [
  "clap",
  "serde",
  "serde_json",
+ "taskmanager",
  "uuid",
 ]
 

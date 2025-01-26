@@ -1,7 +1,5 @@
 use std::process;
 
-mod config;
-mod project;
 mod cli;
 
 fn main() {
